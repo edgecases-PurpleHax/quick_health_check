@@ -1,0 +1,13 @@
+[Unit]
+Description=IP Updater Flask Service
+After=network.target
+
+[Service]
+User=your-username
+WorkingDirectory=/path/to/your/flask/app
+ExecStart=/usr/bin/python3 /path/to/your/flask/app/server.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
