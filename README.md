@@ -4,11 +4,11 @@ This repository provides an automated system for updating SSH configurations acr
 
 ## Components
 
-    Flask Server (server.py): Manages and serves updated IP addresses for the remote hosts.
-    Client Script (client.py): Runs on each remote host (apex, cybercoders, creativecc) to send their updated IP addresses to the Flask server.
-    Pentesters Script (pentesters.py): Runs on the pentesters' machines to pull the updated IP addresses from the Flask server and update their local SSH configuration.
-    Cron Jobs: Automates the periodic execution of client.py and pentesters.py on remote hosts and testers' machines, respectively.
-    Systemd Service: Automates the start of the Flask server (server.py) on boot and ensures it stays running.
+    - Flask Server (server.py): Manages and serves updated IP addresses for the remote hosts.
+    - Client Script (client.py): Runs on each remote host (apex, cybercoders, creativecc) to send their updated IP addresses to the Flask server.
+    - Pentesters Script (pentesters.py): Runs on the pentesters' machines to pull the updated IP addresses from the Flask server and update their local SSH configuration.
+    - Cron Jobs: Automates the periodic execution of client.py and pentesters.py on remote hosts and testers' machines, respectively.
+    - Systemd Service: Automates the start of the Flask server (server.py) on boot and ensures it stays running.
 
 ## Installation Instructions
 
