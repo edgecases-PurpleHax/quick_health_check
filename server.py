@@ -1,3 +1,13 @@
+"""
+Flask application to manage and serve updated IP addresses for specified hosts.
+The application provides endpoints to retrieve current IP addresses and update
+the IP addresses for the specified hosts ('apex', 'cybercoders', 'creativecc').
+
+API Endpoints:
+- /config (GET): Returns the current IPs for all hosts in JSON format.
+- /update_ip (POST): Updates the IP address for a specified host.
+"""
+
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
@@ -12,10 +22,13 @@ client_ips = {
 @app.route("/config", methods=["GET"])
 def get_config():
     """
-    Return the current IPs for the specified hosts in JSON format.
-    
+    Get the current IPs for all specified hosts.
+
+    This endpoint returns the current IP addresses for the 'apex',
+    'cybercoders', and 'creativecc' hosts in JSON format.
+
     Returns:
-        Response: JSON object containing hostnames and their IPs.
+        Response: JSON object containing hostnames and their corresponding IPs.
     """
     return jsonify(client_ips)
 
@@ -23,10 +36,16 @@ def get_config():
 def update_ip():
     """
     Update the IP address for a specified host.
-    
-    Expected Input:
-        JSON object with keys 'host' and 'ip' to update the relevant host's IP.
-        
+
+    This endpoint accepts a JSON object with the 'host' and 'ip' keys
+    to update the corresponding host's IP address in the system.
+
+    Example JSON input:
+    {
+        "host": "apex",
+        "ip": "172.27.247.54"
+    }
+
     Returns:
         Response: Success or error message based on the input.
     """

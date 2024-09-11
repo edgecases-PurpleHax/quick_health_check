@@ -1,38 +1,64 @@
-import requests
-import netifaces as ni
+"""
+Flask application to manage and serve updated IP addresses for specified hosts.
+The application provides endpoints to retrieve current IP addresses and update
+the IP addresses for the specified hosts ('apex', 'cybercoders', 'creativecc').
 
-SERVER_URL = "http://155.138.223.225:5000/update_ip"
-CLIENT_NAME = "apex"  # Change this to the appropriate client name
+API Endpoints:
+- /config (GET): Returns the current IPs for all hosts in JSON format.
+- /update_ip (POST): Updates the IP address for a specified host.
+"""
 
-def get_tun0_ip():
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+# Store the IPs for the hosts that the clients will update
+client_ips = {
+    "apex": "172.27.246.137",
+    "cybercoders": "172.27.246.135",
+    "creativecc": "172.27.246.142"
+}
+
+@app.route("/config", methods=["GET"])
+def get_config():
     """
-    Fetch the IP address of the tun0 interface.
-    
+    Get the current IPs for all specified hosts.
+
+    This endpoint returns the current IP addresses for the 'apex',
+    'cybercoders', and 'creativecc' hosts in JSON format.
+
     Returns:
-        str: The IP address of the tun0 interface.
+        Response: JSON object containing hostnames and their corresponding IPs.
     """
-    ni.ifaddresses('tun0')
-    ip = ni.ifaddresses('tun0')[ni.AF_INET][0]['addr']
-    return ip
+    return jsonify(client_ips)
 
-def send_ip_to_server(ip):
+@app.route("/update_ip", methods=["POST"])
+def update_ip():
     """
-    Send the client's IP and identifier to the server.
-    
-    Args:
-        ip (str): The client's tun0 IP address.
-    
+    Update the IP address for a specified host.
+
+    This endpoint accepts a JSON object with the 'host' and 'ip' keys
+    to update the corresponding host's IP address in the system.
+
+    Example JSON input:
+    {
+        "host": "apex",
+        "ip": "172.27.247.54"
+    }
+
     Returns:
-        None
+        Response: Success or error message based on the input.
     """
-    data = {'host': CLIENT_NAME, 'ip': ip}
-    response = requests.post(SERVER_URL, json=data)
-    if response.status_code == 200:
-        print(f"IP {ip} for {CLIENT_NAME} sent successfully.")
+    data = request.get_json()
+    host = data.get('host')
+    new_ip = data.get('ip')
+    
+    if host in client_ips and new_ip:
+        client_ips[host] = new_ip
+        return jsonify({"status": "success", "message": f"Updated {host} IP to {new_ip}"}), 200
     else:
-        print(f"Failed to send IP for {CLIENT_NAME}. Status code: {response.status_code}")
+        return jsonify({"status": "error", "message": "Invalid host or IP"}), 400
 
 if __name__ == "__main__":
-    tun0_ip = get_tun0_ip()
-    send_ip_to_server(tun0_ip)
+    app.run(host="0.0.0.0", port=5000)
 
