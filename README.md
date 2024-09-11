@@ -105,7 +105,7 @@ On each remote host, set up a cron job to periodically send the updated IP to th
 
 Open the crontab for editing:
 
-bash
+
 ```
 crontab -e
 ```
@@ -134,13 +134,13 @@ Set Up the Cron Job:
 
 Open the crontab for editing:
 
-bash
+
 ```
 crontab -e
 ```
 Add the following line to run pentesters.py every 30 minutes:
 
-bash
+
 ```
     */30 * * * * /usr/bin/python3 /path/to/pentesters.py >> /path/to/pentesters_log.txt 2>&1
 ```
