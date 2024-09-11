@@ -144,7 +144,7 @@ Add the following line to run pentesters.py every 30 minutes:
 ```
     */30 * * * * /usr/bin/python3 /path/to/pentesters.py >> /path/to/pentesters_log.txt 2>&1
 ```
-    Adjust the interval as needed.
+* Adjust the interval as needed.
 
 Additional Notes
     Ensure that the paths to client.py and pentesters.py are correctly specified in the cron jobs.
