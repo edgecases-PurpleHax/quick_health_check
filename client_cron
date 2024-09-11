@@ -1,0 +1,2 @@
+*/30 * * * * /usr/bin/python3 /path/to/client.py >> /path/to/client_log.txt 2>&1
+
