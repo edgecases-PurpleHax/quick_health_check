@@ -12,7 +12,7 @@ This repository provides an automated system for updating SSH configurations acr
 
 ## Installation Instructions
 
-### Flask Server Setup
+### 1. Flask Server Setup
 
 #### Prerequisites
 
@@ -24,128 +24,143 @@ This repository provides an automated system for updating SSH configurations acr
 
 1. **Clone the Repository**:
 
-   ```
+   ```bash
    git clone https://github.com/your-repo/quick_health_check.git
-    cd quick_health_check
-    ```
-Install Flask:
+   cd quick_health_check
+   ```
 
-Install the required Python packages using pip:
+2. **Install Flask**:
 
-```
-pip install flask
-```
-Set Up the systemd Service:
+   Install the required Python packages using pip:
 
-Create the systemd service file for the Flask app.
+   ```bash
+   pip install flask
+   ```
 
-Edit or create a service file at /etc/systemd/system/healthcheck.service:
+3. **Set Up the `systemd` Service**:
 
+   Create the `systemd` service file for the Flask app.
 
-```
-sudo nano /etc/systemd/system/healthcheck.service
-```
-Add the following content to the file:
+   Edit or create a service file at `/etc/systemd/system/healthcheck.service`:
 
-```
+   ```bash
+   sudo nano /etc/systemd/system/healthcheck.service
+   ```
 
-[Unit]
-Description=IP Updater Flask Service
-After=network.target
+   Add the following content to the file:
 
-[Service]
-User=your-username # Replace with your username
-WorkingDirectory=/path/to/your/flask/app # Replace with the path to your Flask app
-ExecStart=/usr/bin/python3 /path/to/your/flask/app/server.py # Replace with the full path to server.py
-Restart=always
+   ```ini
+   [Unit]
+   Description=IP Updater Flask Service
+   After=network.target
 
-[Install]
-WantedBy=multi-user.target
-```
-Reload systemd:
+   [Service]
+   User=your-username # Replace with your username
+   WorkingDirectory=/path/to/your/flask/app # Replace with the path to your Flask app
+   ExecStart=/usr/bin/python3 /path/to/your/flask/app/server.py # Replace with the full path to server.py
+   Restart=always
 
-After saving the file, reload systemd and start the service:
+   [Install]
+   WantedBy=multi-user.target
+   ```
 
-```
-sudo systemctl daemon-reload
-sudo systemctl enable healthcheck
-sudo systemctl start healthcheck
-```
-Check Service Status:
+4. **Reload `systemd`**:
 
-Verify that the Flask server is running:
+   After saving the file, reload `systemd` and start the service:
 
-```
-    sudo systemctl status healthcheck
-```
-Flask Server Configuration
+   ```bash
+   sudo systemctl daemon-reload
+   sudo systemctl enable healthcheck
+   sudo systemctl start healthcheck
+   ```
 
-The server.py script handles requests from remote hosts (client.py) and pentesters' machines (pentesters.py). It serves updated IPs for the specified hosts (apex, cybercoders, creativecc).
+5. **Check Service Status**:
 
-API Endpoints:
-    /config: Returns the current IPs in JSON format.
-    /update_ip: Accepts POST requests to update the IP for a specified host.
+   Verify that the Flask server is running:
 
-Remote Hosts (Clients) Setup
+   ```bash
+   sudo systemctl status healthcheck
+   ```
 
-Each remote host (apex, cybercoders, creativecc) needs to run the client.py script to send its updated IP address to the Flask server.
-Steps
+### 2. Flask Server Configuration
 
-Clone the Repository:
+The `server.py` script handles requests from remote hosts (`client.py`) and pentesters' machines (`pentesters.py`). It serves updated IPs for the specified hosts (`apex`, `cybercoders`, `creativecc`).
 
-On each remote host:
+- **API Endpoints**:
+  - `/config`: Returns the current IPs in JSON format.
+  - `/update_ip`: Accepts POST requests to update the IP for a specified host.
 
-```    
-git clone https://github.com/your-repo/quick_health_check.git
-cd quick_health_check
-```
-Set Up the Cron Job:
+---
 
-On each remote host, set up a cron job to periodically send the updated IP to the Flask server.
+### 3. Remote Hosts (Clients) Setup
 
-Open the crontab for editing:
+Each remote host (`apex`, `cybercoders`, `creativecc`) needs to run the `client.py` script to send its updated IP address to the Flask server.
 
+#### Steps
 
-```
-crontab -e
-```
-Add the following line to run client.py every 30 minutes:
+1. **Clone the Repository**:
 
-```
-    */30 * * * * /usr/bin/python3 /path/to/client.py >> /path/to/client_log.txt 2>&1
-```
-- Adjust the interval as needed.
+   On each remote host:
 
-Pentesters Machines Setup
+   ```bash
+   git clone https://github.com/your-repo/quick_health_check.git
+   cd quick_health_check
+   ```
 
-Pentesters will run the pentesters.py script on their local machines to periodically fetch the updated SSH config from the Flask server.
-Steps
+2. **Set Up the Cron Job**:
 
-Clone the Repository:
+   On each remote host, set up a cron job to periodically send the updated IP to the Flask server.
 
-On each pentester's machine:
+   Open the crontab for editing:
 
-    
-```
-git clone https://github.com/your-repo/quick_health_check.git
-cd quick_health_check
-```
-Set Up the Cron Job:
+   ```bash
+   crontab -e
+   ```
 
-Open the crontab for editing:
+   Add the following line to run `client.py` every 30 minutes:
 
+   ```bash
+   */30 * * * * /usr/bin/python3 /path/to/client.py >> /path/to/client_log.txt 2>&1
+   ```
 
-```
-crontab -e
-```
-Add the following line to run pentesters.py every 30 minutes:
+   Adjust the interval as needed.
 
+---
 
-```
-    */30 * * * * /usr/bin/python3 /path/to/pentesters.py >> /path/to/pentesters_log.txt 2>&1
-```
-* Adjust the interval as needed.
+### 4. Pentesters Machines Setup
 
-Additional Notes
-    Ensure that the paths to client.py and pentesters.py are correctly specified in the cron jobs.
-    Logs can be reviewed in the specified log file paths (client_log.txt, pentesters_log.txt) for debugging or confirmation.
+Pentesters will run the `pentesters.py` script on their local machines to periodically fetch the updated SSH config from the Flask server.
+
+#### Steps
+
+1. **Clone the Repository**:
+
+   On each pentester's machine:
+
+   ```bash
+   git clone https://github.com/your-repo/quick_health_check.git
+   cd quick_health_check
+   ```
+
+2. **Set Up the Cron Job**:
+
+   Open the crontab for editing:
+
+   ```bash
+   crontab -e
+   ```
+
+   Add the following line to run `pentesters.py` every 30 minutes:
+
+   ```bash
+   */30 * * * * /usr/bin/python3 /path/to/pentesters.py >> /path/to/pentesters_log.txt 2>&1
+   ```
+
+   Adjust the interval as needed.
+
+---
+
+### Additional Notes
+
+- Ensure that the paths to `client.py` and `pentesters.py` are correctly specified in the cron jobs.
+- Logs can be reviewed in the specified log file paths (`client_log.txt`, `pentesters_log.txt`) for debugging or confirmation.
